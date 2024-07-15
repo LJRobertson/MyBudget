@@ -1,7 +1,7 @@
 """
 
 Author:  Lindsey Robertson
-Date written: 07/13/24
+Date written: 07/14/24
 Assignment:   Final Project
 Short Desc:   This program is a budget tracker, allowing a user to track how much they have spent for the month. 
 
