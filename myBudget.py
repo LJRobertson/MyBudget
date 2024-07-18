@@ -14,7 +14,6 @@ from tkinter.filedialog import *
 root = Tk()
 #root.geometry('500x400')
 
-#the following section was done following the tutorial video for frames to get the project started. The final project will include panels within the frame and the frame attributes will be changed.
 #create a window
     #can add a text attribute if desired, padding here is inside of frame
 masterFrame = LabelFrame(root, padx = 50, pady = 50)
@@ -28,9 +27,9 @@ masterFrame.pack()
 
 
 #create a top frame
-topFrame = Frame(masterFrame, width = 475, height = 40, bg = "green")
+topFrame = Frame(masterFrame, width = 475, height = 25, bg = "green")
 #grid to frame
-topFrame.grid(row = 1, column = 0)
+topFrame.grid(row = 1, columnspan= 4)
 
 #center the topFrame
 # window_width = root.winfo_width()
@@ -41,7 +40,7 @@ topFrame.grid(row = 1, column = 0)
 #create a label widget
 mainLabel = Label(topFrame, text = "My Budget")
 #gridding the label widget to the screen
-mainLabel.grid(padx = 50, pady=50, row = 1, column = 0, columnspan=2)
+mainLabel.grid(padx = 75, pady=25, row = 1, columnspan=4)
 
 #create left column within master frame
 leftFrame = Frame(masterFrame, width = 250, height = 400, bg = "blue")
@@ -55,6 +54,12 @@ rightFrame = Frame(masterFrame, width = 250, height = 400, bg = "pink")
 rightFrame.grid(row = 2, column = 2)
 #rightFrame.pack()
 
+#create bottom frame
+bottomFrame = Frame(masterFrame, width = 475, height = 40, border = 10, borderwidth= 25, background= "orange")
+#grid to frame
+bottomFrame.grid(row = 3, columnspan=3)
+
+
 #align these frames
 # window_width = root.winfo_width()
 # x = window_width// 2
@@ -67,17 +72,14 @@ rightFrame.grid(row = 2, column = 2)
 #Open file
 def openFile():
     """Opens a text file and extracts account data before closing the file."""
-    f = askopenfile(mode = 'r', filetypes =[('Text Files', '*.txt')])
-    if f is not None:
-        transactions = f.read()
-    else :
-        print("Please select a text file.")
-    f.close
+    #Open the file for read and append. This creates an open window for user to select a txt file. Other file options are removed.
+    f = askopenfile(mode = 'a+', filetypes =[('Text Files', '*.txt')])
+    transactions = f.read()
 
 #open button
 openButton = Button(masterFrame, text = "Open File", command = openFile)
 #grid to frame 
-openButton.grid(row = 0, column = 2)
+openButton.grid(row = 0, column = 2, sticky = "NSEW")
 
 #Quit Program  
 def quitProgram():
@@ -87,11 +89,17 @@ def quitProgram():
 #quit program
 quitButton = Button(masterFrame, text = "Quit", command = quitProgram)
 #grid to frame
-quitButton.grid(row = 0, column = 3)
+quitButton.grid(row = 0, column = 3, sticky = "NSEW")
 
 
-
-
+#Transaction total in bottom frame
+transTotalLabel = Label(bottomFrame, text = "Transaction Total:")
+#add to frame
+transTotalLabel.grid(row = 0, column=0, padx = 5, pady = 10)
+#transaction total output box
+transTotalBox = Entry(bottomFrame, state = "readonly")
+#add to frame
+transTotalBox.grid(row = 0, column=1)
 
 #event loop to run program
 root.mainloop()
