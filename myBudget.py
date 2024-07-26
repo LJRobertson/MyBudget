@@ -19,21 +19,18 @@ class MyBudget:
 
         #create a window
         self.masterFrame = LabelFrame(self.root, padx = 25, pady = 25)
-
-        #padding here is outside the frame
+        #add to grid
         self.masterFrame.pack()
 
         #create a top frame
         self.topFrame = Frame(self.masterFrame, width = 475, height = 25, bg = "green")
         #grid to frame
-        self.topFrame.grid(row = 1, columnspan= 4)
+        self.topFrame.grid(row = 1, columnspan= 5)
 
         #open image
         self.cashImage = Image.open("C:\\Users\\Lindsey Robertson\\Documents\\Ivy Tech\\Intro to Sofware Dev\\MyBudget\\cash.png")
-
         #resize image
-        resizedCashImage = self.cashImage.resize((200, 70))
-
+        resizedCashImage = self.cashImage.resize((250, 88))
         self.newCashImage = ImageTk.PhotoImage(resizedCashImage)
 
         #display image using label 
@@ -49,59 +46,72 @@ class MyBudget:
         #self.mainLabel.pack()
 
         #create left column within master frame
-        self.leftFrame = Frame(self.masterFrame, width = 225, height = 375, bg = "blue")
+        self.leftFrame = Frame(self.masterFrame)
         #grid left frame
         self.leftFrame.grid(row =2, column= 0)
         #leftFrame.pack()
 
         #transaction discription box left frame
-        self.transDescriptionBox = Text(self.leftFrame, height = 20, width = 30, padx = 1, pady = 10, state = "disabled")
+        self.transDescriptionBox = Text(self.leftFrame, height = 20, width = 25, padx = 1, pady = 10, state = "disabled")
         self.transDescriptionBox.pack()
 
         #create right column within master frame
-        self.rightFrame = Frame(self.masterFrame, width = 225, height = 375, bg = "pink")
+        self.rightFrame = Frame(self.masterFrame)
         #grid right frame
         self.rightFrame.grid(row = 2, column = 1)
-        #rightFrame.pack()
 
         #transaction Amount box right frame
-        self.transAmountBox = Text(self.rightFrame, height = 20, width = 30, padx = 1, pady = 10, state = "disabled")
+        self.transAmountBox = Text(self.rightFrame, height = 20, width = 25, padx = 1, pady = 10, state = "disabled")
         self.transAmountBox.pack()
 
-
-        #create bottom frame
-        self.bottomFrame = Frame(self.masterFrame, background= "orange")
+        #create BOTTOM FRAME
+        self.bottomFrame = Frame(self.masterFrame, background= "green")
         #grid to frame
         self.bottomFrame.grid(row = 3, columnspan=4)
         #Transaction total in bottom frame
         self.transTotalLabel = Label(self.bottomFrame, text = "Transaction Total:")
         #add to frame
-        self.transTotalLabel.grid(row = 0, column=0, padx = 10, pady = 10)
+        self.transTotalLabel.grid(row = 1, column=0, padx = 10, pady = 5)
         #transaction total output box
-        self.transTotalBox = Entry(self.bottomFrame, state = "readonly")
+        self.transTotalBox = Label(self.bottomFrame, text = "$ 0.00")
         #add to frame
-        self.transTotalBox.grid(row = 0, column=1)
+        self.transTotalBox.grid(row = 1, column=1, padx = 10)
 
-        #open button
+        
+        #BUTTONS
+        # #open button
         openButton = Button(self.masterFrame, text = "Open File", command = self.openFile)
+        #add hover color change
+
         #grid to frame 
-        openButton.grid(row = 0, column = 1, sticky = "NSEW")
+        openButton.grid(row = 0, column = 0, sticky = "NSEW")
+
+        #Save button
+        saveButton =Button(self.masterFrame, text = "Save", command= self.saveTransactions)
+        saveButton.grid(row= 0, column = 1, sticky = "NSEW")
+
+        #quit program button -- ADD HOVER AND
+        quitButton = Button(self.masterFrame, text = "Quit", command = self.quitProgram)
+        #bind to hover methods
+        quitButton.bind('<Enter>', self.on_enter)
+        quitButton.bind('<Leave>', self.on_leave)
+        #grid to frame
+        quitButton.grid(row = 0, column = 2, sticky = "NSEW")
 
         #Transaction Button
-        transactionButton = Button(self.masterFrame, text = "Add Transaction", command = self.addTransaction)
-        transactionButton.grid(row = 0, column =2, sticky ="NSEW")
+        transactionButton = Button(self.bottomFrame, text = "Add Transaction", command = self.addTransactionWindow)
+        transactionButton.grid(row = 0, columnspan =2, sticky ="NSEW")
 
-        #quit program
-        quitButton = Button(self.masterFrame, text = "Quit", command = self.quitProgram)
-        #grid to frame
-        quitButton.grid(row = 0, column = 3, sticky = "NSEW")
+    #change button color on hover
+    def on_enter(self):
+        """Changes a button color on hover."""
+        self.config(background='lightblue', foreground= "white")
+    #change button color back
+    def on_leave(self):
+        """Changes a button color back to normal after a hover."""
+        self.config(background= 'SystemButtonFace', foreground= 'black')
 
-
-        #Transaction Display File
-        #text
-
-        #buttons
-        #open file button
+        
         #Open file
     def openFile(self):
         """Opens a text file and extracts account data before closing the file."""
@@ -120,24 +130,49 @@ class MyBudget:
         #go through file line by line
         for transaction in transactions:
                 #split into a description and an amount
-                descriptAndAmount =transaction.split(":")
+                descriptAndAmount =transaction.split(",")
                 description, amount = descriptAndAmount
-                #add the description to the desctiption box
-                self.transDescriptionBox.insert(END, description.strip(), '\n')
-                #add amount to Amount box
-                self.transAmountBox.insert(END, amount.strip(), '\n')
+                #add the description to the desctiption box and move to a new line
+                self.transDescriptionBox.insert(END, description.strip(" "))
+                self.transDescriptionBox.insert(END, '\n')
+                #add amount to Amount box and move to a new line
+                self.transAmountBox.insert(END, amount.strip(" "))
+                self.transAmountBox.insert(END, '\n')
+
         #disable text boxes again
         self.transDescriptionBox.config(state = "disabled")
         self.transAmountBox.config(state = "disabled")
         self.f.close()
-        
-            
+
+        #update the total
+        self.updateTotal()
     
-    def addTransaction(self):
+    def updateTotal(self):
+         """Updates the transaction total."""
+         #get the total of the transactions
+         total = 0
+         amounts = self.transAmountBox.get(1.0, END)
+         for amount in amounts.splitlines():
+              #remove any whitespace
+              amount = amount.strip()
+              try:
+                total += float(amount)
+              except:
+                  continue
+         #convert total to sting and ensure two decimal places
+         totalString = "{:.2f}".format(total)
+         #write total to box
+         self.transTotalBox.config(text = "$ " + totalString)
+         
+            
+    def saveTransactions(self):
+         "Saves transctions to a .txt file"
+
+    def addTransactionWindow(self):
         """Opens a new window to add transaction information."""
         #create Window
         self.addTransactionWindow = Toplevel(self.root)
-        #title window
+        #title window 
         self.addTransactionWindow.title("Add Transaction")
         #create a frame to hold the widgets
         self.transactionFrame = Frame(self.addTransactionWindow, padx = 25, pady = 25)
@@ -169,8 +204,12 @@ class MyBudget:
         self.transactionAmountEntry.grid(row = 2, column = 1)
 
         #submit button
-        self.submitButton = Button(self.transactionFrame, text= "Submit", pady=5)
-        self.submitButton.grid(row = 3, columnspan =2)
+        self.submitButton = Button(self.transactionFrame, text= "Submit", command = self.addTransaction)
+        self.submitButton.grid(row = 3, column =0)
+
+        #cancel button
+        self.cancelButton = Button(self.transactionFrame, text = "Cancel", command = self.addTransactionWindow.destroy)
+        self.cancelButton.grid(row = 3, column = 1 )
 
         #open image
         self.pigImage = Image.open("C:\\Users\\Lindsey Robertson\\Documents\\Ivy Tech\\Intro to Sofware Dev\\MyBudget\\goldenpig.jpg")
@@ -181,6 +220,33 @@ class MyBudget:
         self.pigImageLabel = Label(self.transactionFrame, image = self.newPigImage) 
         #Grid to frame
         self.pigImageLabel.grid(row=5, columnspan = 2)
+    
+    def addTransaction(self):
+         """Adds entered transaction information to the list on the main screen."""
+         #get transaction description
+         enteredDescription = self.transactionDescription.get()
+         #get transaction amount
+         enteredAmount = self.transactionAmountEntry.get()
+
+         #enable the transaction boxes
+         self.transDescriptionBox.config(state = "normal")
+         self.transAmountBox.config(state = "normal")
+
+         #add transaction information
+         self.transDescriptionBox.insert(END, enteredDescription)
+         self.transDescriptionBox.insert(END, '\n')
+         self.transAmountBox.insert(END, enteredAmount)
+         self.transAmountBox.insert(END, '\n')
+
+         #disable the transaction boxes
+         self.transDescriptionBox.config(state = "disabled")
+         self.transAmountBox.config(state = "disabled")
+
+         #update transaction total
+         self.updateTotal()
+
+         #close the window after entering transaction
+         self.addTransactionWindow.destroy()
 
 
     #Quit Program  

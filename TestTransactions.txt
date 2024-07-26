@@ -1,4 +1,4 @@
-McDonalds : 10.98
-Starbucks : 5.00
-Gasoline : 47.21
-Water Company : 101.98
+McDonalds,10.98
+Starbucks,5.00
+Gasoline,47.21
+Water Company,101.98
