@@ -15,6 +15,7 @@ from tkinter import messagebox
 
 class MyBudget:
     def __init__(self, root):
+        "Initialize the program."
         self.root = root
         self.root.title("My Budget")
 
@@ -47,7 +48,6 @@ class MyBudget:
         self.leftFrame = Frame(self.masterFrame)
         #grid left frame
         self.leftFrame.grid(row =2, column= 0)
-        #leftFrame.pack()
 
         #transaction discription box left frame
         self.transDescriptionBox = Text(self.leftFrame, height = 20, width = 25, padx = 1, pady = 10, state = "disabled")
@@ -58,7 +58,7 @@ class MyBudget:
         #grid right frame
         self.rightFrame.grid(row = 2, column = 1)
 
-        #transaction Amount box right frame
+        #transaction Amount Box right frame
         self.transAmountBox = Text(self.rightFrame, height = 20, width = 25, padx = 1, pady = 10, state = "disabled")
         self.transAmountBox.pack()
 
@@ -77,7 +77,7 @@ class MyBudget:
 
         
         #BUTTONS
-        # #open button
+        #open button
         openButton = Button(self.masterFrame, text = "Open File", command = self.open_file)
         #add hover color change
         openButton.bind('<Enter>', self.on_enter)
@@ -92,8 +92,7 @@ class MyBudget:
         transactionButton.bind('<Enter>', self.on_enter)
         transactionButton.bind('<Leave>', self.on_leave)
 
-
-        #quit program button -- ADD HOVER AND
+        #quit program button
         quitButton = Button(self.masterFrame, text = "Quit", command = self.quit_program)
         #bind to hover methods
         quitButton.bind('<Enter>', self.on_enter)
@@ -205,14 +204,12 @@ class MyBudget:
         self.submitButton.bind('<Enter>', self.on_enter)
         self.submitButton.bind('<Leave>', self.on_leave)
 
-
         #cancel button
         self.cancelButton = Button(self.transactionFrame, text = "Cancel", command = self.add_transaction_window.destroy)
         self.cancelButton.grid(row = 3, column = 1 )
         #add hover color change
         self.cancelButton.bind('<Enter>', self.on_enter)
         self.cancelButton.bind('<Leave>', self.on_leave)
-
 
         #open image
         self.pigImage = Image.open("C:\\Users\\Lindsey Robertson\\Documents\\Ivy Tech\\Intro to Sofware Dev\\MyBudget\\goldenpig.jpg")
@@ -227,7 +224,6 @@ class MyBudget:
     def add_transaction(self):
          """Adds entered transaction information to the list on the main screen."""
          #validate entries
-
          if self.validate_user_entry() == True:
             #get transaction description
             enteredDescription = self.transactionDescription.get()
@@ -249,27 +245,34 @@ class MyBudget:
 
             #update transaction total
             self.update_total()
-
             #close the window after entering transaction
             self.add_transaction_window.destroy()
 
     def validate_user_entry(self):
         """Validates that description entered by user is not blank."""
+        #get the description and amount information entered by user.
         enteredDescription = self.transactionDescription.get()
         enteredAmount = self.transactionAmountEntry.get()
+        #if the description is blank, return false
         if enteredDescription == "":
             messagebox.showerror('Error', "Error: Entry cannot be blank.")
             return False
+        #if the amount is blank, return false
         elif enteredAmount == "":
             messagebox.showerror('Error', "Error: Amount cannot be blank.")
+            return False
+        #if the amount is not numeric, return false
         elif enteredAmount.isalpha():
             messagebox.showerror('Error', "Error: Amount must be numeric.")
+            return False
         else:
+            #if validation was passed, return true
             return True
 
     #Quit Program  
     def quit_program(self):
         """Closes the application."""
+        #close the application
         self.root.destroy()
 
 #event loop to run program
