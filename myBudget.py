@@ -32,18 +32,23 @@ class MyBudget:
         #resize image
         resizedCashImage = self.cashImage.resize((250, 88))
         self.newCashImage = ImageTk.PhotoImage(resizedCashImage)
-
         #display image using label 
-        imageLabel = Label(self.topFrame, image = self.newCashImage) 
+        imageLabel = Label(self.topFrame, image = self.newCashImage, text = "cash image") 
         #Grid to frame
-        #imageLabel.place(x=0, y=0) 
         imageLabel.grid(row = 0, columnspan= 4)
 
         #create a label widget
-        self.mainLabel = Label(self.topFrame, text = "My Budget", font = 'bold')
+        self.mainLabel = Label(self.topFrame, text = "My Budget", font = ("Arial",16,'bold'), padx = 10, fg = "green")
         #gridding the label widget to the screen 
-        self.mainLabel.grid(padx = 75, pady=5, row = 1, columnspan=4)
-        #self.mainLabel.pack()
+        self.mainLabel.grid(padx = 58, pady=5, row = 1, columnspan=4)
+
+        #Transaction Button
+        transactionButton = Button(self.topFrame, text = "Add Transaction", command = self.addTransactionWindow)
+        transactionButton.grid(row =20, columnspan =4, padx =50, pady = 3, sticky ="NSEW")
+        #change button color on hover
+        transactionButton.bind('<Enter>', self.on_enter)
+        transactionButton.bind('<Leave>', self.on_leave)
+
 
         #create left column within master frame
         self.leftFrame = Frame(self.masterFrame)
@@ -104,14 +109,6 @@ class MyBudget:
         quitButton.bind('<Leave>', self.on_leave)
         #grid to frame
         quitButton.grid(row = 0, column = 2, sticky = "NSEW")
-
-        #Transaction Button
-        transactionButton = Button(self.bottomFrame, text = "Add Transaction", command = self.addTransactionWindow)
-        transactionButton.grid(row = 0, columnspan =2, sticky ="NSEW")
-        #change button color on hover
-        transactionButton.bind('<Enter>', self.on_enter)
-        transactionButton.bind('<Leave>', self.on_leave)
-
 
     def on_enter(self, button):
         """Changes a button color on hover."""
@@ -236,7 +233,7 @@ class MyBudget:
         self.resizedPigImage = self.pigImage.resize((200, 80))
         self.newPigImage = ImageTk.PhotoImage(self.resizedPigImage)
         #display image using label 
-        self.pigImageLabel = Label(self.transactionFrame, image = self.newPigImage) 
+        self.pigImageLabel = Label(self.transactionFrame, image = self.newPigImage, text = "golden piggy bank") 
         #Grid to frame
         self.pigImageLabel.grid(row=5, columnspan = 2)
     
