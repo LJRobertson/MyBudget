@@ -82,6 +82,9 @@ class MyBudget:
         # #open button
         openButton = Button(self.masterFrame, text = "Open File", command = self.openFile)
         #add hover color change
+        openButton.bind('<Enter>', self.on_enter)
+        openButton.bind('<Leave>', self.on_leave)
+
 
         #grid to frame 
         openButton.grid(row = 0, column = 0, sticky = "NSEW")
@@ -89,6 +92,10 @@ class MyBudget:
         #Save button
         saveButton =Button(self.masterFrame, text = "Save", command= self.saveTransactions)
         saveButton.grid(row= 0, column = 1, sticky = "NSEW")
+        #bind to hover methods
+        saveButton.bind('<Enter>', self.on_enter)
+        saveButton.bind('<Leave>', self.on_leave)
+
 
         #quit program button -- ADD HOVER AND
         quitButton = Button(self.masterFrame, text = "Quit", command = self.quitProgram)
@@ -101,17 +108,19 @@ class MyBudget:
         #Transaction Button
         transactionButton = Button(self.bottomFrame, text = "Add Transaction", command = self.addTransactionWindow)
         transactionButton.grid(row = 0, columnspan =2, sticky ="NSEW")
+        #change button color on hover
+        transactionButton.bind('<Enter>', self.on_enter)
+        transactionButton.bind('<Leave>', self.on_leave)
 
-    #change button color on hover
-    def on_enter(self):
+
+    def on_enter(self, button):
         """Changes a button color on hover."""
-        self.config(background='lightblue', foreground= "white")
+        button.widget.config(background='lightblue', foreground= "white")
     #change button color back
-    def on_leave(self):
+    def on_leave(self, button):
         """Changes a button color back to normal after a hover."""
-        self.config(background= 'SystemButtonFace', foreground= 'black')
-
-        
+        button.widget.config(background= 'SystemButtonFace', foreground= 'black')
+            
         #Open file
     def openFile(self):
         """Opens a text file and extracts account data before closing the file."""
@@ -151,6 +160,7 @@ class MyBudget:
          """Updates the transaction total."""
          #get the total of the transactions
          total = 0
+         #get the transaction dollar amounts from the amount box
          amounts = self.transAmountBox.get(1.0, END)
          for amount in amounts.splitlines():
               #remove any whitespace
@@ -158,6 +168,7 @@ class MyBudget:
               try:
                 total += float(amount)
               except:
+                #if blank lines are encountered, ignore them
                   continue
          #convert total to sting and ensure two decimal places
          totalString = "{:.2f}".format(total)
@@ -206,10 +217,18 @@ class MyBudget:
         #submit button
         self.submitButton = Button(self.transactionFrame, text= "Submit", command = self.addTransaction)
         self.submitButton.grid(row = 3, column =0)
+        #add hover color change
+        self.submitButton.bind('<Enter>', self.on_enter)
+        self.submitButton.bind('<Leave>', self.on_leave)
+
 
         #cancel button
         self.cancelButton = Button(self.transactionFrame, text = "Cancel", command = self.addTransactionWindow.destroy)
         self.cancelButton.grid(row = 3, column = 1 )
+        #add hover color change
+        self.cancelButton.bind('<Enter>', self.on_enter)
+        self.cancelButton.bind('<Leave>', self.on_leave)
+
 
         #open image
         self.pigImage = Image.open("C:\\Users\\Lindsey Robertson\\Documents\\Ivy Tech\\Intro to Sofware Dev\\MyBudget\\goldenpig.jpg")
