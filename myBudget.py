@@ -42,14 +42,6 @@ class MyBudget:
         #gridding the label widget to the screen 
         self.mainLabel.grid(padx = 58, pady=5, row = 1, columnspan=4)
 
-        #Transaction Button
-        transactionButton = Button(self.topFrame, text = "Add Transaction", command = self.addTransactionWindow)
-        transactionButton.grid(row =20, columnspan =4, padx =50, pady = 3, sticky ="NSEW")
-        #change button color on hover
-        transactionButton.bind('<Enter>', self.on_enter)
-        transactionButton.bind('<Leave>', self.on_leave)
-
-
         #create left column within master frame
         self.leftFrame = Frame(self.masterFrame)
         #grid left frame
@@ -89,17 +81,15 @@ class MyBudget:
         #add hover color change
         openButton.bind('<Enter>', self.on_enter)
         openButton.bind('<Leave>', self.on_leave)
-
-
         #grid to frame 
         openButton.grid(row = 0, column = 0, sticky = "NSEW")
 
-        #Save button
-        saveButton =Button(self.masterFrame, text = "Save", command= self.saveTransactions)
-        saveButton.grid(row= 0, column = 1, sticky = "NSEW")
-        #bind to hover methods
-        saveButton.bind('<Enter>', self.on_enter)
-        saveButton.bind('<Leave>', self.on_leave)
+        #Transaction Button
+        transactionButton = Button(self.masterFrame, text = "Add Transaction", command = self.addTransactionWindow)
+        transactionButton.grid(row =0, column = 1, sticky ="NSEW")
+        #change button color on hover
+        transactionButton.bind('<Enter>', self.on_enter)
+        transactionButton.bind('<Leave>', self.on_leave)
 
 
         #quit program button -- ADD HOVER AND
@@ -172,10 +162,6 @@ class MyBudget:
          #write total to box
          self.transTotalBox.config(text = "$ " + totalString)
          
-            
-    def saveTransactions(self):
-         "Saves transctions to a .txt file"
-
     def addTransactionWindow(self):
         """Opens a new window to add transaction information."""
         #create Window
